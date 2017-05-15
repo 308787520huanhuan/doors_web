@@ -19,6 +19,9 @@
           <mt-loadmore :top-method="goodsLoadTop" :bottom-method="goodsLoadBottom" :bottom-all-loaded="goodsAllLoaded" :auto-fill="false" @top-status-change="goodsHandleTopChange" ref="goodsloadmore">
             <ul>
               <li v-for="good in goodsList" class="eachList">
+                <div class="topContent">
+                    商品ID：{{good.id}}
+                </div>
                 <div class="middleContent">
                   <img :src="good.icon"/>
                   <div class="rightPart">
@@ -61,33 +64,42 @@
               <li v-for="order in ordersList" class="eachList">
                 <router-link :to="{ name: 'OrderDetail',query: {id: order.id}}">
                   <div class="topContent">
-                      订单号：{{order.sn}}
+                      <p>订单号：{{order.sn}}</p>
+                      <p>下单时间：{{order.add_time}}</p>
                   </div>
                   <div class="middleContent">
                     <img :src="order.image"/>
                     <div class="rightPart">
                       <p>数量：{{order.quantity}}</p>
                       <p v-if="order.order_status == 0">
-                        状态：已取消
+                        订单状态：已取消
                       </p>
                       <p v-if="order.order_status == 1">
-                        状态：<span class="red">待付款</span>
+                        订单状态：<span class="red">待付款</span>
                       </p>
                       <p v-if="order.order_status == 2">
-                        状态：<span class="blue">待发货</span>
+                        订单状态：<span class="blue">待发货</span>
                       </p>
                       <p v-if="order.order_status == 3">
-                        状态：<span class="green">已发货</span>
+                        订单状态：<span class="green">已发货</span>
                       </p>
                       <p v-if="order.order_status == 4">
-                        状态：<span class="green">完成</span>
+                        订单状态：<span class="green">完成</span>
                       </p>
-                      <p>下单时间：{{order.add_time}}</p>
+                      <p v-if="order.purchaser_status == 0">
+                        买手状态：<span class="blue">还未接受</span>
+                      </p>
+                      <p v-if="order.purchaser_status == 1">
+                        买手状态：<span class="red">已拒绝</span>
+                      </p>
+                      <p v-if="order.purchaser_status ==2">
+                        买手状态：<span class="green">已接受</span>
+                      </p>
                     </div>
                   </div>
                   <div class="bottomContent">
                     <span class="green">已付款：{{order.amount_paid}}.00元</span>
-                    <span class="red fr">未付款：{{order.amount_payable}}.00元</span>
+                    <span class="red fr">未付款：{{order.amount_payable - order.amount_paid}}.00元</span>
                   </div>
                 </router-link>
               </li>
@@ -102,6 +114,7 @@
                   <img :src="order.image"/>
                   <div class="rightPart">
                     <p>数量：{{order.quantity}}</p>
+                    <p>买手：{{order.buyer.name}}</p>
                     <p v-if="order.order_status == 0">
                       状态：已取消
                     </p>
@@ -364,8 +377,8 @@ export default {
 }
 .middleContent > img{
   margin-right: 10px;
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   display: block;
 }
 .middleContent > .rightPart{
